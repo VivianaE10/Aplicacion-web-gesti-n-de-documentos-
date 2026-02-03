@@ -18,7 +18,7 @@ const obtenerUsuarios = async (req, res) => {
 const obtenerUsuarioPorId = async (req, res) => {
   try {
     const usuario = await Usuario.findByPk(req.params.id, {
-      attributes: { exclude: ["contrasena"] },
+      attributes: { exclude: ["contrasena"] }, // Excluir la contraseña de la respuesta
     });
     if (!usuario) {
       return res.status(404).json({ mensaje: "Usuario no encontrado" });
@@ -57,18 +57,27 @@ const actualizarUsuario = async (req, res) => {
   }
 };
 
-// Registrar usuario
+// Registrar usuario con valdacion de contaseñas
 const registrarUsuario = async (req, res) => {
   try {
-    const { nombre, correo, contrasena, rol } = req.body;
+    const { nombre, correo, contrasena, confirmarContrasena, rol } = req.body;
 
-    // Validar campos obligatorios
-    if (!nombre || !correo || !contrasena) {
+    // Validar campos obligatorio
+    if (!nombre || !correo || !contrasena || !confirmarContrasena) {
       return res
         .status(400)
         .json({ mensaje: "Todos los campos son obligatorios" });
     }
+    // Validar que las contraseñas coincidan
+    if (contrasena !== confirmarContrasena) {
+      return res.status(400).json({ mensaje: "Las contraseñas no coinciden" });
+    }
 
+    // Validar rol
+    const rolesValidos = ["usuario", "admin"];
+    if (rol && !rolesValidos.includes(rol)) {
+      return res.status(400).json({ mensaje: "Rol no válido" });
+    }
     // Verificar si el correo ya existe
     const usuarioExistente = await Usuario.findOne({ where: { correo } });
     if (usuarioExistente) {
