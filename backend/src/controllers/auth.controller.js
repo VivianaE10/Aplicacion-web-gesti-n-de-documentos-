@@ -110,9 +110,58 @@ const registrarUsuario = async (req, res) => {
   }
 };
 
-// Login (lo implementamos después)
-const loginUsuario = (req, res) => {
-  res.json({ mensaje: "Login pendiente de implementar" });
+//implementar login con los jwt
+const jwt = require("jsonwebtoken"); //importa el paquete jsonwebtoken para manejar tokens JWT
+
+const loginUsuario = async (req, res) => {
+  try {
+    const { correo, contrasena } = req.body;
+
+    // Validar campos
+    if (!correo || !contrasena) {
+      return res
+        .status(400)
+        .json({ mensaje: "Correo y contraseña son obligatorios" });
+    }
+
+    // Buscar usuario por correo
+    const usuario = await Usuario.findOne({ where: { correo } });
+    if (!usuario) {
+      return res.status(400).json({ mensaje: "Usuario no encontrado" });
+    }
+
+    // Comparar contraseñas
+    const esValida = await bcrypt.compare(contrasena, usuario.contrasena);
+    if (!esValida) {
+      return res.status(400).json({ mensaje: "Contraseña incorrecta" });
+    }
+
+    // Generar token JWT
+    const token = jwt.sign(
+      {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        correo: usuario.correo,
+        rol: usuario.rol,
+      },
+      process.env.JWT_SECRET, // esta es la clae secreta que valida el token
+      { expiresIn: "2h" },
+    );
+
+    res.json({
+      mensaje: "Login exitoso",
+      token,
+      usuario: {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        correo: usuario.correo,
+        rol: usuario.rol,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: "Error al iniciar sesión" });
+  }
 };
 
 module.exports = {
