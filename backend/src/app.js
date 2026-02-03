@@ -7,17 +7,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-//PRUEBA DE CONEXIÓN A LA BASE DE DATOS
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("✅ Conexión a la base de datos exitosa");
-  })
-  .catch((error) => {
-    console.error("❌ Error al conectar a la base de datos:", error);
-  });
-
 // aquí luego van las rutas
-// app.use('/auth', authRoutes);
+
+app.use("/auth", require("./routes/auth.routes"));
 
 module.exports = app;
