@@ -1,0 +1,5 @@
+correo,nombre,telefono,ciudad,notas
+juan@mail.com,Juan Perez,3123456789,Bogotá,Nota de ejemplo
+sincorreo,,3001234567,Medellín,Falta correo y nombre
+carlos@mail.com,Carlos Gómez,telefono,Cali,Teléfono no es numérico
+ana@mail.com,Ana Ruiz,3001234567,,Falta ciudad
