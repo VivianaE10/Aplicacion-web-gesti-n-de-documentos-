@@ -11,5 +11,6 @@ app.use(express.json());
 
 app.use("/auth", require("./routes/auth.routes"));
 app.use("/csv", require("./routes/csv.routes"));
+app.use("/documentos", require("./routes/documentos.routes"));
 
 module.exports = app;
