@@ -3,6 +3,24 @@
     <h2 class="mb-4 text-center">Dashboard</h2>
     <div v-if="alerta" :class="`alert alert-${alerta.tipo}`" role="alert">
       {{ alerta.mensaje }}
+
+      <!-- muestra un mensaje de errores si el csv le faltan datos  -->
+      <ul
+        v-if="alerta.errores && alerta.errores.length"
+        class="mt-2 mb-0 text-start"
+      >
+        <li v-for="(err, idx) in alerta.errores" :key="idx">
+          <div><strong>Error:</strong> {{ err.error }}</div>
+          <div v-if="err.fila">
+            <span v-for="(valor, campo) in err.fila" :key="campo">
+              <strong>{{ campo }}:</strong> {{ valor
+              }}<span v-if="campo !== Object.keys(err.fila).slice(-1)[0]"
+                >,
+              </span>
+            </span>
+          </div>
+        </li>
+      </ul>
     </div>
     <!-- cargo el archivo-->
     <div
@@ -115,6 +133,7 @@ export default {
       const file = e.dataTransfer.files[0];
       if (file) this.subirCSV(file);
     },
+    // Método para subir el archivo CSV a la API
     async subirCSV(file) {
       this.alerta = null;
       try {
@@ -127,15 +146,21 @@ export default {
         const docs = await obtenerDocumentos();
         this.documentos = docs.data;
       } catch (error) {
-        if (error.response && error.response.data && error.response.data.mensaje) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.mensaje
+        ) {
           this.alerta = {
             tipo: "danger",
             mensaje: error.response.data.mensaje,
+            errores: error.response.data.errores || [],
           };
         } else {
           this.alerta = {
             tipo: "danger",
             mensaje: "Error al subir el archivo.",
+            errores: [],
           };
         }
       }
