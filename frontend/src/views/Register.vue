@@ -133,6 +133,8 @@ export default {
           this.confirmarContrasena =
             "";
         this.rol = "usuario";
+        // Redirigir al login después del registro exitoso
+        this.$router.push("/login");
       } catch (e) {
         this.error = e.response?.data?.mensaje || "Error al registrar usuario";
       }

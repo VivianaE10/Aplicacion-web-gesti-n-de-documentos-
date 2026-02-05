@@ -1,59 +1,73 @@
 <template>
-  <v-container class="fill-height" fluid>
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="4">
-        <v-card>
-          <v-card-title class="text-h5">Iniciar Sesión</v-card-title>
-          <v-card-text>
-            <v-form @submit.prevent="login">
-              <v-text-field
-                v-model="usuario"
-                label="Usuario"
-                prepend-inner-icon="mdi-account"
-                required
-              />
-              <v-text-field
-                v-model="contrasena"
-                label="Contraseña"
-                type="password"
-                prepend-inner-icon="mdi-lock"
-                required
-              />
-              <v-btn type="submit" color="primary" block class="mt-4">
-                Ingresar
-              </v-btn>
-            </v-form>
-            <v-alert v-if="error" type="error" class="mt-2">{{
-              error
-            }}</v-alert>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow p-4">
+          <h2 class="mb-4 text-center">Login</h2>
+          <form @submit.prevent="login">
+            <div class="mb-3">
+              <label class="form-label">Correo</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-person"></i
+                ></span>
+                <input
+                  v-model="correo"
+                  type="email"
+                  class="form-control"
+                  required
+                />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Contraseña</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input
+                  v-model="contrasena"
+                  type="password"
+                  class="form-control"
+                  required
+                />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="bi bi-box-arrow-in-right"></i> Ingresar
+            </button>
+          </form>
+          <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import axios from "axios";
-import { useRouter } from "vue-router";
-
-const usuario = ref("");
-const contrasena = ref("");
-const error = ref("");
-const router = useRouter();
-
-const login = async () => {
-  error.value = "";
-  try {
-    const res = await axios.post("http://localhost:3000/auth/login", {
-      correo: usuario.value,
-      contrasena: contrasena.value,
-    });
-    localStorage.setItem("token", res.data.token);
-    router.push("/dashboard");
-  } catch (e) {
-    error.value = e.response?.data?.mensaje || "Error al iniciar sesión";
-  }
+<script>
+import { loginUsuario } from "../utils/api";
+export default {
+  name: "Login",
+  data() {
+    return {
+      correo: "",
+      contrasena: "",
+      error: "",
+    };
+  },
+  methods: {
+    async login() {
+      this.error = "";
+      try {
+        const response = await loginUsuario({
+          correo: this.correo,
+          contrasena: this.contrasena,
+        });
+        // Guardar el token en el almacenamiento local y redirigir al dashboard
+        localStorage.setItem("token", response.data.token);
+        this.$router.push("/dashboard");
+      } catch (e) {
+        this.error = e.response?.data?.mensaje || "Credenciales incorrectas";
+      }
+    },
+  },
 };
 </script>
