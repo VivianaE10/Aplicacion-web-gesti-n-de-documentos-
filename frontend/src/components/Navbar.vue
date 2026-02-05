@@ -36,7 +36,7 @@
               <i class="bi bi-box-arrow-in-right"></i> Login
             </router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="isLoggedIn && isDashboardRoute">
             <router-link
               class="nav-link nav-link-strong d-flex align-items-center gap-1"
               to="/dashboard"
@@ -53,6 +53,33 @@
 <script>
 export default {
   name: "Navbar",
+  data() {
+    return {
+      isLoggedIn: !!localStorage.getItem("token"),
+    };
+  },
+  computed: {
+    isDashboardRoute() {
+      return this.$route.path === "/dashboard";
+    },
+  },
+  mounted() {
+    window.addEventListener("storage", this.syncLoginState);
+    this.$watch(
+      () => this.$route.path,
+      () => {
+        this.isLoggedIn = !!localStorage.getItem("token");
+      }
+    );
+  },
+  beforeUnmount() {
+    window.removeEventListener("storage", this.syncLoginState);
+  },
+  methods: {
+    syncLoginState() {
+      this.isLoggedIn = !!localStorage.getItem("token");
+    },
+  },
 };
 </script>
 

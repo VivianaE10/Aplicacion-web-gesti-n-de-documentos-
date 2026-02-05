@@ -33,8 +33,8 @@
         <tbody>
           <tr v-for="doc in documentos" :key="doc.id">
             <td>{{ doc.nombre_original }}</td>
-            <td>{{ doc.usuario_nombre }}</td>
-            <td>{{ doc.fecha_carga }}</td>
+            <td>{{ doc.Usuario ? doc.Usuario.nombre : "" }}</td>
+            <td>{{ formatFecha(doc.fecha_carga) }}</td>
             <td>{{ doc.cantidad_registros }}</td>
             <td>
               <button
@@ -59,8 +59,8 @@
 </template>
 
 <script>
-import jwt_decode from "jwt-decode";
-import { obtenerDocumentos } from "../utils/api";
+import { jwtDecode } from "jwt-decode";
+import { obtenerDocumentos, subirArchivoCSV } from "../utils/api";
 export default {
   name: "Dashboard",
   data() {
@@ -73,6 +73,7 @@ export default {
   async mounted() {
     const token = localStorage.getItem("token");
     if (!token) {
+      this.documentos = [];
       this.alerta = {
         tipo: "danger",
         mensaje: "Debes iniciar sesión para acceder al Dashboard.",
@@ -84,12 +85,12 @@ export default {
     }
     // Decodificar el token para obtener el rol real
     try {
-      const payload = jwt_decode(token);
+      const payload = jwtDecode(token);
       this.rol = payload.rol || "usuario";
     } catch (e) {
       this.rol = "usuario";
     }
-    // Obtener documentos reales
+    // Obtener documentos reales de la API documentos
     try {
       const res = await obtenerDocumentos();
       this.documentos = res.data;
@@ -101,6 +102,11 @@ export default {
     }
   },
   methods: {
+    formatFecha(fecha) {
+      if (!fecha) return "";
+      const d = new Date(fecha);
+      return d.toLocaleDateString() + " " + d.toLocaleTimeString();
+    },
     onFileChange(e) {
       const file = e.target.files[0];
       if (file) this.subirCSV(file);
@@ -109,13 +115,30 @@ export default {
       const file = e.dataTransfer.files[0];
       if (file) this.subirCSV(file);
     },
-    subirCSV(file) {
-      // Aquí irá la lógica para subir el archivo al backend
-      // y manejar la respuesta de éxito/error
-      this.alerta = {
-        tipo: "info",
-        mensaje: "Funcionalidad de carga pendiente...",
-      };
+    async subirCSV(file) {
+      this.alerta = null;
+      try {
+        const res = await subirArchivoCSV(file);
+        this.alerta = {
+          tipo: "success",
+          mensaje: res.data.mensaje + ` (${res.data.cantidad} registros)`,
+        };
+        // Refrescar la lista de documentos
+        const docs = await obtenerDocumentos();
+        this.documentos = docs.data;
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.mensaje) {
+          this.alerta = {
+            tipo: "danger",
+            mensaje: error.response.data.mensaje,
+          };
+        } else {
+          this.alerta = {
+            tipo: "danger",
+            mensaje: "Error al subir el archivo.",
+          };
+        }
+      }
     },
     descargar(doc) {
       // Lógica para descargar el documento

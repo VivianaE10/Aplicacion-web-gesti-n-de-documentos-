@@ -1,3 +1,11 @@
+// Subir archivo CSV
+export function subirArchivoCSV(file) {
+  const formData = new FormData();
+  formData.append("archivo", file);
+  return api.post("/csv/cargar", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+}
 import axios from "axios"; // importar axios para hacer llamadas HTTP
 
 const API_URL = "http://localhost:3000";
