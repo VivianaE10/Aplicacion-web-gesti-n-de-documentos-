@@ -66,6 +66,11 @@ const cargarCSV = async (req, res) => {
     nombre_guardado: req.file.filename,
     cantidad_registros: resultados.length,
     usuario_id: req.usuario.id, // mirar  que el usuario esté en el token
+    // fecha_carga: new Date(), // Si tu base lo pone automáticamente, puedes omitirlo
+  });
+  // Recargar para obtener fecha_carga y usuario
+  await documento.reload({
+    include: [{ model: require("../models").Usuario, attributes: ["nombre"] }],
   });
 
   // 2. Agregar documento_id a cada fila
@@ -80,6 +85,7 @@ const cargarCSV = async (req, res) => {
   res.json({
     mensaje: "Datos guardados correctamente",
     cantidad: resultados.length,
+    documento,
   });
 };
 

@@ -1,5 +1,5 @@
 //si el usuario es admin puede eliminar documentos
-const { Documento } = require("../models");
+const { Documento, Usuario } = require("../models");
 
 const eliminarDocumento = async (req, res) => {
   const id = req.params.id;
@@ -11,9 +11,13 @@ const eliminarDocumento = async (req, res) => {
   res.json({ mensaje: "Documento eliminado correctamente" });
 };
 
-// Nuevo: listar todos los documentos
+// para que me liste todos los documentos con usuario y fecha
 const listarDocumentos = async (req, res) => {
-  const docs = await Documento.findAll();
+  const docs = await Documento.findAll({
+    include: [{ model: Usuario, attributes: ["nombre"] }],
+    order: [["id", "DESC"]],
+  });
+  console.log("Documentos enviados:", JSON.stringify(docs, null, 2));
   res.json(docs);
 };
 
