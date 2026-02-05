@@ -6,6 +6,15 @@ export const api = axios.create({
   baseURL: API_URL,
 });
 
+// para agregar el token a cada petición si el usuario está autenticado
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // metodo para registrar usuario
 export function registrarUsuario(datos) {
   return api.post("/auth/registro", datos);
@@ -14,4 +23,9 @@ export function registrarUsuario(datos) {
 // metodo para login usuario
 export function loginUsuario(datos) {
   return api.post("/auth/login", datos);
+}
+
+// Obtener documentos
+export function obtenerDocumentos() {
+  return api.get("/documentos");
 }

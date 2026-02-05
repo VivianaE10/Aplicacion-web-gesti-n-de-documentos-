@@ -1,11 +1,10 @@
 <template>
   <div class="container py-4">
     <h2 class="mb-4 text-center">Dashboard</h2>
-    <!-- Alerta de feedback -->
     <div v-if="alerta" :class="`alert alert-${alerta.tipo}`" role="alert">
       {{ alerta.mensaje }}
     </div>
-    <!-- Área de carga de archivos -->
+    <!-- cargo el archivo-->
     <div
       class="drop-area border border-2 border-primary rounded-3 p-4 mb-4 text-center bg-light"
       @dragover.prevent
@@ -20,7 +19,6 @@
         class="form-control d-inline w-auto"
       />
     </div>
-    <!-- Tabla de documentos -->
     <div class="table-responsive">
       <table class="table table-hover align-middle">
         <thead class="table-primary">
@@ -61,18 +59,46 @@
 </template>
 
 <script>
+import jwt_decode from "jwt-decode";
+import { obtenerDocumentos } from "../utils/api";
 export default {
   name: "Dashboard",
   data() {
     return {
       documentos: [], // Aquí se cargarán los documentos desde la API
-      alerta: null, // { tipo: 'success'|'danger', mensaje: '' }
+      alerta: null, // Para mostrar mensajes de éxito/error
       rol: "usuario", // Simulación, luego se debe leer del token/localStorage
     };
   },
-  mounted() {
-    // Aquí deberías cargar los documentos y el rol real del usuario
-    // this.rol = localStorage.getItem('rol') || 'usuario';
+  async mounted() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      this.alerta = {
+        tipo: "danger",
+        mensaje: "Debes iniciar sesión para acceder al Dashboard.",
+      };
+      setTimeout(() => {
+        this.$router.push("/login");
+      }, 2000);
+      return;
+    }
+    // Decodificar el token para obtener el rol real
+    try {
+      const payload = jwt_decode(token);
+      this.rol = payload.rol || "usuario";
+    } catch (e) {
+      this.rol = "usuario";
+    }
+    // Obtener documentos reales
+    try {
+      const res = await obtenerDocumentos();
+      this.documentos = res.data;
+    } catch (e) {
+      this.alerta = {
+        tipo: "danger",
+        mensaje: "No se pudieron cargar los documentos.",
+      };
+    }
   },
   methods: {
     onFileChange(e) {
