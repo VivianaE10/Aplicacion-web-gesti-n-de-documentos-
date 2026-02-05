@@ -30,6 +30,7 @@
     >
       <i class="bi bi-cloud-arrow-up display-4 text-primary mb-2"></i>
       <p class="mb-2">Arrastra y suelta tu archivo CSV aquí o</p>
+      <!-- Botón de eliminar fuera de la tabla eliminado -->
       <input
         type="file"
         accept=".csv"
@@ -64,7 +65,7 @@
               <button
                 v-if="rol === 'admin'"
                 class="btn btn-outline-danger btn-sm"
-                @click="eliminar(doc)"
+                @click="eliminar(doc.id)"
               >
                 <i class="bi bi-trash"></i>
               </button>
@@ -77,8 +78,13 @@
 </template>
 
 <script>
+import * as api from "../utils/api";
 import { jwtDecode } from "jwt-decode";
-import { obtenerDocumentos, subirArchivoCSV } from "../utils/api";
+import {
+  obtenerDocumentos,
+  subirArchivoCSV,
+  descargarArchivoCSV,
+} from "../utils/api";
 export default {
   name: "Dashboard",
   data() {
@@ -165,19 +171,39 @@ export default {
         }
       }
     },
-    descargar(doc) {
-      // Lógica para descargar el documento
-      this.alerta = {
-        tipo: "info",
-        mensaje: "Funcionalidad de descarga pendiente...",
-      };
+    async descargar(doc) {
+      try {
+        const res = await descargarArchivoCSV(doc.nombre_guardado);
+        // Crear un enlace temporal para descargar el archivo
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", doc.nombre_original);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        this.alerta = {
+          tipo: "danger",
+          mensaje: "No se pudo descargar el archivo.",
+        };
+      }
     },
-    eliminar(doc) {
-      // Lógica para eliminar el documento (solo admin)
-      this.alerta = {
-        tipo: "info",
-        mensaje: "Funcionalidad de eliminación pendiente...",
-      };
+    //visible solo para admin
+    async eliminar(id) {
+      console.log("Intentando eliminar documento con id:", id);
+      try {
+        const token = localStorage.getItem("token");
+        await api.deleteDocumento(id, token);
+        this.documentos = this.documentos.filter((doc) => doc.id !== id);
+        this.alerta = { tipo: "success", mensaje: "Documento eliminado" };
+      } catch (err) {
+        this.alerta = {
+          tipo: "danger",
+          mensaje: "Error al eliminar documento",
+        };
+      }
     },
   },
 };
