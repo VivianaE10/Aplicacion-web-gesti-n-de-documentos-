@@ -30,7 +30,7 @@
     >
       <i class="bi bi-cloud-arrow-up display-4 text-primary mb-2"></i>
       <p class="mb-2">Arrastra y suelta tu archivo CSV aquí o</p>
-      <!-- Botón de eliminar fuera de la tabla eliminado -->
+      <!-- Botón de eliminar  -->
       <input
         type="file"
         accept=".csv"
@@ -90,8 +90,8 @@ export default {
   data() {
     return {
       documentos: [], // Aquí se cargarán los documentos desde la API
-      alerta: null, // Para mostrar mensajes de éxito/error
-      rol: "usuario", // Simulación, luego se debe leer del token/localStorage
+      alerta: null, // mostrar mensajes de éxito/error
+      rol: "usuario", // rol del usuario actual
     };
   },
   async mounted() {

@@ -8,7 +8,10 @@ const Documento = sequelize.define(
     nombre_guardado: DataTypes.STRING,
     cantidad_registros: DataTypes.INTEGER,
     usuario_id: DataTypes.INTEGER,
-    fecha_carga: DataTypes.DATE,
+    fecha_carga: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     tableName: "documentos",

@@ -32,7 +32,7 @@ const Usuario = sequelize.define(
     tableName: "usuarios", //mapiamos el modelo a la tabla usuarios
     timestamps: true, //crea automaticamente los campos de createdAt y updatedAt
     createdAt: "fecha_creacion", //crea el campo fecha_creacion en lugar de createdAt
-    updatedAt: "fecha_actualizacion",
+    updatedAt: "fecha_actualizacion", // se crea el campo fecha_actualizacion en lugar de updatedAt
   },
 );
 

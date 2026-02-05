@@ -2,6 +2,14 @@
 const { Documento, Usuario } = require("../models");
 
 const eliminarDocumento = async (req, res) => {
+  console.log("[eliminarDocumento] usuario:", req.usuario);
+  // Verificar si el usuario es admin para permitir la eliminación
+  if (!req.usuario || req.usuario.rol !== "admin") {
+    //bloquea si no es admin
+    return res
+      .status(403)
+      .json({ mensaje: "No tienes permisos para eliminar documentos" });
+  }
   const id = req.params.id;
   const doc = await Documento.findByPk(id); // Busca el documento por su ID
   if (!doc) {
@@ -16,6 +24,7 @@ const listarDocumentos = async (req, res) => {
   const docs = await Documento.findAll({
     include: [{ model: Usuario, attributes: ["nombre"] }],
     order: [["id", "DESC"]],
+    // Trae todos los campos, incluyendo fecha_carga
   });
   console.log("Documentos enviados:", JSON.stringify(docs, null, 2));
   res.json(docs);

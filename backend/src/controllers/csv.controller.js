@@ -61,13 +61,15 @@ const cargarCSV = async (req, res) => {
   }
 
   // antes de guardar los csv se crea un registro en documentos con la info del archivo y el usuario que lo subió
-  const documento = await Documento.create({
+  const datosDocumento = {
     nombre_original: req.file.originalname,
     nombre_guardado: req.file.filename,
     cantidad_registros: resultados.length,
     usuario_id: req.usuario.id, // mirar  que el usuario esté en el token
-    // fecha_carga: new Date(), // Si tu base lo pone automáticamente, puedes omitirlo
-  });
+    fecha_carga: new Date(),
+  };
+  console.log("Datos a guardar en Documento:", datosDocumento);
+  const documento = await Documento.create(datosDocumento);
   // Recargar para obtener fecha_carga y usuario
   await documento.reload({
     include: [{ model: require("../models").Usuario, attributes: ["nombre"] }],

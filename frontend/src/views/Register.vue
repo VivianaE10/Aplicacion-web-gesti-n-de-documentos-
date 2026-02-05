@@ -5,6 +5,7 @@
         <div class="card shadow p-4">
           <h2 class="mb-4 text-center">Registro</h2>
           <form @submit.prevent="registrar">
+            <!-- ejecuta el metodo registrar al enviar el formulario cuando hace clic en el boton -->
             <div class="mb-3">
               <label class="form-label">Nombre</label>
               <div class="input-group">
@@ -118,7 +119,7 @@ export default {
         return;
       }
       try {
-        // Llamamos a la función del API para registrar el usuario
+        // Llamamos a la función que hace la llamada a la API para registrar el usuario
         await registrarUsuario({
           nombre: this.nombre,
           correo: this.correo,
