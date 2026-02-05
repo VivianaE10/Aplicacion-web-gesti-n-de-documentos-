@@ -1,0 +1,40 @@
+# version: "3.8"
+# services: # Definición de servicios contenedores
+#   mysql:
+#     image: mysql:8.0
+#     container_name: mysql_db
+#     environment:
+#       MYSQL_ROOT_PASSWORD: rootpassword
+#       MYSQL_DATABASE: gestion_documentos
+#       MYSQL_USER: user
+#       MYSQL_PASSWORD: userpassword
+#     ports:
+#       - "3306:3306"
+#     volumes:
+#       - mysql_data:/var/lib/mysql # Volumen para persistencia de datos
+
+#   backend:
+#     build: ./backend # construye la imagen desde el Dockerfile en el directorio backend
+#     container_name: backend_app # Nombre del contenedor backend
+#     ports:
+#       - "3000:3000"
+#     environment:
+#       - DB_HOST=mysql
+#       - DB_USER=user
+#       - DB_PASSWORD=userpassword
+#       - DB_NAME=gestion_documentos
+#     depends_on:
+#       - mysql # Asegura que MySQL se inicie antes que el backend
+#     volumes:
+#       - ./backend:/usr/src/app # Monta el código fuente del backend
+#   frontend:
+#     build: ./frontend
+#     container_name: frontend_app
+#     ports:
+#       - "8080:8080"
+#     depends_on:
+#       - backend # este servicios depende de que el backend este listo antes de iniciarse
+#     volumes:
+#       - ./frontend:/app # Monta el código fuente del frontend
+# volumes:
+#   mysql_data: # Volumen para persistencia de datos de MySQL

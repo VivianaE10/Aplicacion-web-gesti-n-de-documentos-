@@ -57,10 +57,10 @@ const actualizarUsuario = async (req, res) => {
   }
 };
 
-// Registrar usuario con valdacion de contaseñas
+// Registrar usuario con validacion de contraseñas
 const registrarUsuario = async (req, res) => {
   try {
-    const { nombre, correo, contrasena, confirmarContrasena, rol } = req.body;
+    const { nombre, correo, contrasena, confirmarContrasena, rol } = req.body; //recibimos los datos del usuario desde el cuerpo de la petición
 
     // Validar campos obligatorio
     if (!nombre || !correo || !contrasena || !confirmarContrasena) {

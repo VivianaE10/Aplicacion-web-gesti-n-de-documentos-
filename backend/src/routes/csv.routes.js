@@ -8,7 +8,7 @@ const path = require("path");
 // Configuración de multer para subir archivos
 const upload = multer({ dest: "uploads/" });
 
-// Ruta para cargar el CSV (protegida)
+// endpoint para cargar el CSV (protegida)
 router.post("/cargar", verificarToken, upload.single("archivo"), cargarCSV);
 
 // Endpoint para descargar un archivo CSV por nombre (solo autenticado)
