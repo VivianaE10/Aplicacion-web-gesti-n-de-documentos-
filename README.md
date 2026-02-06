@@ -124,11 +124,11 @@ Desarrollé una herramienta de gestión de documentos CSV con autenticación, ro
 
 ---
 
-🐳 Ejecución del Proyecto con Docker
+## Ejecución del Proyecto con Docker
 
 Se implemento Docker en toda la aplicación con el objetivo de facilitar la ejecución del proyecto en cualquier entorno local sin configuraciones manuales.
 
-📦 Estructura Docker
+## Estructura Docker
 
 El proyecto cuenta con:
 
@@ -151,7 +151,7 @@ El proyecto cuenta con:
   - Volumen para persistencia de datos
   - Mapeo de puertos locales
 
-⚙️ Cómo ejecutar el proyecto
+## Cómo ejecutar el proyecto
 
 Desde la raíz del proyecto ejecutar:
 
@@ -166,7 +166,7 @@ Este comando:
 - configura la red interna
 - levanta frontend, backend y base de datos
 
-🌐 Acceso local
+## Acceso local
 
 Una vez levantados los contenedores:
 
@@ -186,5 +186,6 @@ Puedes registrarte, iniciar sesión y gestionar documentos desde el frontend. El
 - La estructura del código es modular, limpia y fácil de mantener.
 - El sistema es seguro: solo usuarios autenticados pueden operar y solo admin puede eliminar documentos.
 - El frontend es responsivo y amigable, usando Bootstrap y buenas prácticas de Vue 3 Option API.
+  -Implementé la contenerización del proyecto utilizando Docker y Docker Compose (primera experiencia práctica), logrando integrar Frontend, Backend y Base de Datos en un entorno reproducible y fácil de desplegar.
 
 ---
