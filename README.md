@@ -1,29 +1,3 @@
----
-
-## Endpoints principales del backend (API REST)
-
-Puedes validar el funcionamiento accediendo a las siguientes rutas en http://localhost:3000:
-
-- **Registro de usuario:**
-  - POST `/auth/registro`
-  - Ejemplo: http://localhost:3000/auth/registro
-
-- **Login de usuario:**
-  - POST `/auth/login`
-  - Ejemplo: http://localhost:3000/auth/login
-
-- **Gestión de documentos:**
-  - GET `/documentos` (listar documentos)
-  - POST `/documentos` (crear documento)
-  - Ejemplo: http://localhost:3000/documentos
-
-- **Carga de CSV:**
-  - POST `/csv/upload`
-  - Ejemplo: http://localhost:3000/csv/upload
-
-Puedes probar estos endpoints usando herramientas como Postman, Insomnia o cURL.
-# Full Stack Developer (Node.js & Vue 3)
-
 ## Descripción General
 
 Desarrollé una herramienta de gestión de documentos CSV con autenticación, roles de usuario y persistencia de datos. El sistema permite a los usuarios cargar, listar, descargar y (solo admin) eliminar documentos, validando los datos y mostrando feedback claro en la interfaz.
