@@ -1,14 +1,40 @@
-## Validación y pruebas
+---
 
-- Probé todos los endpoints del backend (registro, login, carga de CSV, listado, descarga y eliminación) usando Postman.
-- Verifiqué la autenticación JWT, la validación de datos y el control de acceso por roles.
-- Confirmé que la API responde correctamente ante errores y acciones exitosas.
+## Endpoints principales del backend (API REST)
 
+Puedes validar el funcionamiento accediendo a las siguientes rutas en http://localhost:3000:
+
+- **Registro de usuario:**
+  - POST `/auth/registro`
+  - Ejemplo: http://localhost:3000/auth/registro
+
+- **Login de usuario:**
+  - POST `/auth/login`
+  - Ejemplo: http://localhost:3000/auth/login
+
+- **Gestión de documentos:**
+  - GET `/documentos` (listar documentos)
+  - POST `/documentos` (crear documento)
+  - Ejemplo: http://localhost:3000/documentos
+
+- **Carga de CSV:**
+  - POST `/csv/upload`
+  - Ejemplo: http://localhost:3000/csv/upload
+
+Puedes probar estos endpoints usando herramientas como Postman, Insomnia o cURL.
 # Full Stack Developer (Node.js & Vue 3)
 
 ## Descripción General
 
 Desarrollé una herramienta de gestión de documentos CSV con autenticación, roles de usuario y persistencia de datos. El sistema permite a los usuarios cargar, listar, descargar y (solo admin) eliminar documentos, validando los datos y mostrando feedback claro en la interfaz.
+
+---
+
+## Validación y pruebas
+
+- Probé los endpoints del backend (registro, login, carga de CSV, listado y eliminación) usando Postman.
+- Verifiqué la autenticación JWT, la validación de datos y el control de acceso por roles.
+- Confirmé que la API responde correctamente ante errores y acciones exitosas.
 
 ---
 
@@ -123,6 +149,60 @@ Desarrollé una herramienta de gestión de documentos CSV con autenticación, ro
 - bootstrap@5
 
 ---
+
+🐳 Ejecución del Proyecto con Docker
+
+Se implemento Docker en toda la aplicación con el objetivo de facilitar la ejecución del proyecto en cualquier entorno local sin configuraciones manuales.
+
+📦 Estructura Docker
+
+El proyecto cuenta con:
+
+- Dockerfile Backend
+  - Instala dependencias del servidor Node.js
+  - Ejecuta la API REST con Express
+  - Permite la conexión con la base de datos
+
+- Dockerfile Frontend
+  - Construye la aplicación cliente
+  - Sirve los archivos estáticos usando Nginx
+  - Expone el puerto web para acceso desde el navegador
+
+- docker-compose.yml (en la raíz del proyecto)
+  - Servicio frontend
+  - Servicio backend
+  - Servicio db (MySQL)
+  - Red interna entre servicios
+  - Variables de entorno
+  - Volumen para persistencia de datos
+  - Mapeo de puertos locales
+
+⚙️ Cómo ejecutar el proyecto
+
+Desde la raíz del proyecto ejecutar:
+
+```bash
+docker-compose up --build
+```
+
+Este comando:
+
+- construye las imágenes Docker
+- crea los contenedores
+- configura la red interna
+- levanta frontend, backend y base de datos
+
+🌐 Acceso local
+
+Una vez levantados los contenedores:
+
+- **Frontend:**
+  - http://localhost:8080
+
+- **Backend (API REST):**
+  - http://localhost:3000
+
+Puedes registrarte, iniciar sesión y gestionar documentos desde el frontend. El backend expone las rutas principales para autenticación, gestión de documentos y carga de CSV.
 
 ## Logros y consideraciones
 
