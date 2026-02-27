@@ -185,7 +185,7 @@ Puedes registrarte, iniciar sesión y gestionar documentos desde el frontend. El
 - Mostré feedback claro y útil al usuario en cada acción.
 - La estructura del código es modular, limpia y fácil de mantener.
 - El sistema es seguro: solo usuarios autenticados pueden operar y solo admin puede eliminar documentos.
-- El frontend es responsivo y amigable, usando Bootstrap y buenas prácticas de Vue 3 Option API.
   -Implementé la contenerización del proyecto utilizando Docker y Docker Compose (primera experiencia práctica), logrando integrar Frontend, Backend y Base de Datos en un entorno reproducible y fácil de desplegar.
+- El frontend es responsivo y amigable, usando Bootstrap y buenas prácticas de Vue 3 Option API.
 
 ---
